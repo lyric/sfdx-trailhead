@@ -1,0 +1,14 @@
+public class AccountProcessor {
+    @future
+    public static void countContacts(list<Id> AccountIds){
+        
+        List<Account> Accounts = [select id, Number_of_contacts__c from Account where ID in :AccountIds];
+        List<Account> AccountsToUpdate = new List<Account>();
+        For (Account acct :Accounts){
+            acct.Number_of_contacts__c = [select count() from Contact where AccountId =:acct.id ];
+      
+            AccountsToUpdate.add(acct);
+        }
+        update AccountsToUpdate;
+    }
+}

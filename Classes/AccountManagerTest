@@ -1,0 +1,17 @@
+@isTest
+public class AccountManagerTest {
+    static testMethod void testFuncionality(){
+        Account A1 = new Account(Name='AccountOne');
+        insert A1;
+        Contact C1 = new Contact(LastName = 'ContactOne',AccountID=A1.id);
+        insert C1;
+        ID accountID = A1.id;
+        RestRequest request = new RestRequest();
+        request.requestURI = 'https://cunning-bear-hmmt9x-dev-ed.my.salesforce.com/services/apexrest/Accounts/' + accountID + '/contacts';
+        request.httpMethod = 'Get';
+        RestContext.request = request;
+        Account thisAccount = AccountManager.getAccount();
+        system.debug(thisAccount);
+        system.debug(thisAccount.contacts);
+    }
+}

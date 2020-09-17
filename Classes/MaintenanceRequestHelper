@@ -1,0 +1,43 @@
+public class MaintenanceRequestHelper {
+    
+    public static void updateWorkOrders(List<Id> requests){
+     	List<Case> RequestsToInsert = new List<Case>();
+        List<Case> CasesToUpdate = [Select Id, Equipment__c, Vehicle__c, Equipment__r.Maintenance_Cycle__c,
+                            Origin, ContactId,CaseNumber,
+                            (Select Equipment__r.Maintenance_Cycle__c from Work_Parts__r) from Case
+                           where Id in: requests];
+        for (case c :CasesToUpdate){
+            Case newCase = new Case();
+            Decimal serviceDays = MaintenancePeriod(c);
+            newCase.Type = 'Routine Maintenance';
+            newCase.Status = 'New';
+            newCase.Origin = c.Origin;
+            newCase.ContactId = c.ContactId;
+            newCase.Equipment__c = c.Equipment__c;
+            newCase.Vehicle__c = c.Vehicle__c;
+            newCase.Subject = 'Maintenance Followup';
+            newCase.Date_Reported__c = Date.today();
+            newCase.Date_Due__c = Date.today().addDays(Integer.valueOf(serviceDays));
+            RequestsToInsert.add(newCase);
+        }
+        insert RequestsToInsert;
+    }       
+    
+    private static Decimal MaintenancePeriod(Case request){
+        Decimal X;
+        system.debug('MR#: '+request.CaseNumber );
+        system.debug('WPs: '+request.Work_Parts__r.size());
+        if (request.Work_Parts__r.size()>0){
+            X = request.Work_Parts__r.get(0).Equipment__r.Maintenance_Cycle__c;
+            for (Work_Part__c wp : request.Work_Parts__r){
+                if (wp.Equipment__r.Maintenance_Cycle__c < X){
+                    X = wp.Equipment__r.Maintenance_Cycle__c;
+                }
+            }
+        } else {
+            X = 365;
+        }
+        return X;
+    }
+    
+}

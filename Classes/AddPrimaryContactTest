@@ -1,0 +1,24 @@
+@isTest
+public class AddPrimaryContactTest {
+    @testSetup
+    static void setup() {
+        List<Account> Accounts = new List<Account>();
+        for (Integer i = 0; i < 50; i++){
+        	accounts.add(new Account(name='TestAccountNY'+i,BillingState='NY'));
+    	}
+        for (Integer i = 0; i < 50; i++){
+        	accounts.add(new Account(name='TestAccountCA'+i,BillingState='CA'));
+    	}    
+        Insert Accounts;
+    }
+    
+    static testmethod void testQueueable() {
+        Contact C1 = new Contact(lastName='testguy');
+        Insert C1;
+        
+        AddPrimaryContact updater = new AddPrimaryContact(C1,'CA');
+        test.startTest();
+        System.enqueueJob(updater);
+        test.stopTest();
+    }
+}

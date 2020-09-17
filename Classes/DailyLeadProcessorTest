@@ -1,0 +1,19 @@
+@isTest
+public class DailyLeadProcessorTest {
+    public static String Cron_exp = '0 0 0 15 3 ? 2022';
+    static testmethod void test_leadProcessor() {
+        List<Lead> Leads = new List<lead>();
+        for (Integer i=0; i< 200; i++){
+            lead L = new Lead(Lastname='TestLead '+i,Company='testcompany');
+            leads.add(L);
+        }
+        Insert leads;
+        test.startTest();
+        String jobid = System.schedule('schedApexTest',Cron_exp,new DailyLeadProcessor());
+        Test.stopTest();
+        
+        //check that all leads were updated
+        List<Lead> LL = [select id from Lead where leadsource = 'Dreamforce'];
+        system.assertEquals(leads.size(),LL.size(),'Leads were not updated');
+    }
+}

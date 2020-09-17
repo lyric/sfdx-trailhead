@@ -1,0 +1,11 @@
+trigger MaintenanceRequest on Case (after update) {
+    List<Id> CasesToUpdate = new List<Id>();
+    for (Case request :Trigger.New){
+        if(Trigger.oldMap.get(request.Id).Status!='Closed'&& request.Status=='Closed'){
+            if(request.Type=='Routine Maintenance'||request.Type=='Repair'){
+                CasesToUpdate.add(request.Id);
+            }
+        }
+    } 
+    MaintenanceRequestHelper.updateWorkOrders(CasesToUpdate);
+}

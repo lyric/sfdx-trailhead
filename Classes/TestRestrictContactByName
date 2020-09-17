@@ -1,0 +1,8 @@
+@isTest
+public class TestRestrictContactByName {
+    @isTest static void testmethod1(){
+        //insert contact that will cause trigger to fire. 
+        Contact C1 = new Contact(lastName = 'INVALIDNAME');
+        insert C1;
+    }	
+}

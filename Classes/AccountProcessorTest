@@ -1,0 +1,18 @@
+@IsTest
+private class AccountProcessorTest {
+	@IsTest 
+    private static void testFunction(){
+        Account A1 = new Account();
+        A1.Name = 'testaccount1';
+        Insert A1;
+        Contact C1 = new contact();
+        C1.LastName = 'testContact1';
+        C1.AccountId = A1.Id;
+        Insert C1;
+        List<id> acctIDs = new List<id>();
+        acctIds.add(A1.Id);
+        Test.startTest();
+        AccountProcessor.countContacts(acctIds);
+        Test.stopTest();
+    }
+}
